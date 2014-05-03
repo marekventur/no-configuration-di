@@ -1,6 +1,6 @@
 {
   "name": "no-configuration-di",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A simple dependency injection framework that doesn't need any configuration",
   "main": "index.js",
   "scripts": {
