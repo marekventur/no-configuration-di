@@ -17,7 +17,7 @@ Greeter.js:
 
 module.exports = function(namer) {
     this.great = function() {
-        console.log('Hello %s', namer.name);
+        console.log('Hello %s', namer.getName());
     }
 }
 ```
@@ -70,7 +70,7 @@ Checks all instances for the existence of a function called ```functionName``` a
 ```Javascript
 di.load('DatabaseManager');
 di.add('HttpServer', {
-  run: function() {
+  start: function() {
     var deferred = Q.defer();
     server.listen(8080, deferred.makeNodeResolver());
     return deferred.promise;
