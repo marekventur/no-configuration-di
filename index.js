@@ -53,6 +53,7 @@ module.exports = function(srcPath) {
 
                 dependencies[0] = subject;
                 decoratorFunction.apply(that, dependencies);
+                return subject;
             }
         }
 
