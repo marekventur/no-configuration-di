@@ -1,0 +1,29 @@
+{
+  "name": "no-configuration-di",
+  "version": "0.0.0",
+  "description": "A simple dependency injection framework that doesn't need any configuration",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/marekventur/no-configuration-di.git"
+  },
+  "keywords": [
+    "dependency-injection"
+  ],
+  "author": "Marek Ventur <marekventur@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/marekventur/no-configuration-di/issues"
+  },
+  "dependencies": {
+    "q": "~1.0.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.18.2",
+    "chai-as-promised": "~4.1.1",
+    "chai": "~1.9.1"
+  }
+}
