@@ -1,7 +1,7 @@
 {
   "name": "no-configuration-di",
   "version": "0.1.0",
-  "description": "A simple dependency injection framework that doesn't need any configuration",
+  "description": "A simple, configuration-free dependency injection framework",
   "main": "index.js",
   "scripts": {
     "test": "mocha test.js"
@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "mocha": "~1.18.2",
-    "chai-as-promised": "~4.1.1",
     "chai": "~1.9.1"
   }
 }

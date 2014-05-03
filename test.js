@@ -99,6 +99,58 @@ describe('no-configuration-di', function() {
             });
 
         });
+
+        it('adds decorators', function() {
+            di.load('AlphaDummy');
+            di.loadDecorator('decorators/One');
+
+            var subject = {isSubject: true};
+            di.get('oneDecorator').decorate(subject);
+
+            assert.ok(subject.isSubject);
+            assert.ok(subject.decoratedWithOne);
+        });
+
+        it('can not add decorators when dependencies are missing', function() {
+            try {
+                di.loadDecorator('decorators/One');
+                assert.fail();
+            } catch(err) {
+                assert.equal(err.message, 'Dependency for decorators/One not found: alphaDummy');
+            }
+        });
+
+        it('allows chaining of decorators', function() {
+            di.load('AlphaDummy');
+            di.load('nested/BetaDummy');
+            di.loadDecorator('decorators/One', 'subjectDecorator');
+            di.loadDecorator('decorators/Two', 'subjectDecorator');
+
+            var subject = {isSubject: true};
+            di.get('subjectDecorator').decorate(subject);
+
+            assert.ok(subject.isSubject);
+            assert.ok(subject.decoratedWithOne);
+            assert.ok(subject.decoratedWithTwo);
+        });
+
+        it('decorators do not need to be chained', function() {
+            di.load('AlphaDummy');
+            di.load('nested/BetaDummy');
+            di.loadDecorator('decorators/One');
+            di.loadDecorator('decorators/Two');
+
+            var subject = {isSubject: true};
+            di.get('twoDecorator').decorate(subject);
+
+            assert.ok(subject.isSubject);
+            assert.notOk(subject.decoratedWithOne);
+            assert.ok(subject.decoratedWithTwo);
+
+            di.get('oneDecorator').decorate(subject);
+
+            assert.ok(subject.decoratedWithOne);
+        });
     })
 
 

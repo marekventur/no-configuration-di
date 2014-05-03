@@ -81,3 +81,65 @@ di.runAll('start')
   console.log('Database and Server have been successfully started');
 });
 ```
+
+loadDecorator(path, [decoratorName])
+--------------------------
+See chapter about "Decorators". ```path``` has to be a path to a function, decorators won't be "newed", but just called. Decorator can have multiple dependencies, but the first parameter has to be the subject which is going to be decorated. No return value is expected, the subject should be decorated in place.
+
+if no ```decoratorName``` is defined it will be implied from the filename: ```loadDecorator('decorators/UserDbAccess.js')``` will add an instance of ```userDbAccessDecorator``` that can be now be injected in other classes.
+
+If multiple decorators share the same ```decoratorName``` those decorators will be chained.
+
+Decorators
+====
+
+Decorators are useful for turning simple objects into objects with methods. Here's an example that uses multiple decorators chained together:
+
+```Javascript
+Advertiser.js:
+
+module.exports = function(userDecorator) {
+
+    this.advertiseToUser = function(userId) {
+        database.getUserById(userId)
+        .then(function(user) {
+            userDecorator.decorate(user);
+            user.sendEmail('Please come back to our site, your friend ' + user.getRandomFriend() + " is missing you.");
+        });
+    };
+}
+```
+
+```Javascript
+decorators/UserEmail.js:
+
+module.exports = function(user, emailer) {
+    user.sendEmail = function(text) {
+        emailer.send(user.email, text);
+    }
+}
+```
+
+```Javascript
+decorators/UserFriends.js:
+
+module.exports = function(user) {
+    user.getRandomFriend = function() {
+        return 'Fred'
+    }
+}
+```
+
+
+```Javascript
+app.js
+
+di.load('Database');
+di.load('Emailer');
+di.loadDecorator('decorators/UserEmail', 'userDecorator');
+di.loadDecorator('decorators/UserFriends', 'userDecorator');
+di.load('Advertiser');
+
+di.get('advertiser').advertiseToUser(14);
+
+```
