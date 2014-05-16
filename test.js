@@ -22,7 +22,7 @@ describe('no-configuration-di', function() {
                 di.load('TetaDummy');
                 assert.fail();
             } catch(err) {
-                assert.match(err.message, /^Cannot find module.*TetaDummy/);
+                assert.match(err.message, /^Cannot find dependency TetaDummy/);
             }
         });
 
@@ -153,12 +153,32 @@ describe('no-configuration-di', function() {
         });
     })
 
+    context('when successfully initialised with two folders', function() {
+        beforeEach(function() {
+            di = new Di([
+                __dirname + '/test-src-two',
+                __dirname + '/test-src'
+            ]);
+        })
+
+        it('finds files in the primary folder', function() {
+            di.load('AlphaDummy');
+            assert.ok(di.get('alphaDummy').otherAlpha);
+        })
+
+        it('finds files in the secondary folder if they do not exist in the primary', function() {
+            di.load('AlphaDummy');
+            di.load('nested/BetaDummy');
+        })
+
+    });
+
 
     it('erros when initialised without parameter', function() {
         try {
             new Di();
         } catch(err) {
-            assert.match(err.message, /^Please define src path/);
+            assert.match(err.message, /^Please define at least one src path/);
         }
     });
 

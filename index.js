@@ -1,8 +1,10 @@
 var Q = require('q');
 
-module.exports = function(srcPath) {
-    if (!srcPath) {
-        throw new Error('Please define src path');
+module.exports = function(srcPaths) {
+    if (typeof srcPaths === 'string') {
+        srcPaths = [srcPaths];
+    } else if (!srcPaths instanceof Array) {
+        throw new Error('Please define at least one src path');
     }
 
     var that = this;
@@ -10,13 +12,32 @@ module.exports = function(srcPath) {
     var instances = {};
     var instancesInOrder = [];
 
+    that.require = function(path) {
+        var result = null;
+        var i = 0;
+        var len = srcPaths.length;
+
+        while (!result && i < len) {
+            var srcPath = srcPaths[i];
+            try {
+
+                result = require(srcPath + '/' + path);
+            } catch(e) {}
+            i++;
+        }
+        if (result) {
+            return result;
+        }
+        throw new Error("Cannot find dependency " + path)
+    }
+
     that.load = function(path, instanceName) {
         if (!instanceName) {
             instanceName = path.split('/').pop();
             instanceName = instanceName.charAt(0).toLowerCase() + instanceName.slice(1);
         }
 
-        var constructor = require(srcPath + '/' + path);
+        var constructor = that.require(path);
 
         var parameterNames = getParameterNames(constructor, path);
         var dependencies = getDependenciesByParameterNames(parameterNames, path, instances);
@@ -36,7 +57,7 @@ module.exports = function(srcPath) {
             decoratorName = decoratorName.charAt(0).toLowerCase() + decoratorName.slice(1) + 'Decorator';
         }
 
-        var decoratorFunction = require(srcPath + '/' + path);
+        var decoratorFunction = that.require(path);
 
         var parameterNames = getParameterNames(decoratorFunction, path);
         parameterNames.shift();
