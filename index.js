@@ -20,9 +20,12 @@ module.exports = function(srcPaths) {
         while (!result && i < len) {
             var srcPath = srcPaths[i];
             try {
-
                 result = require(srcPath + '/' + path);
-            } catch(e) {}
+            } catch(e) {
+                if (e.code !== 'MODULE_NOT_FOUND') {
+                    throw e;
+                }
+            }
             i++;
         }
         if (result) {

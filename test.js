@@ -26,6 +26,15 @@ describe('no-configuration-di', function() {
             }
         });
 
+        it('errors if object can not be initialised', function() {
+            try {
+                di.load('ErroringClass');
+                assert.fail();
+            } catch(err) {
+                assert.match(err.message, /^This is a test/);
+            }
+        });
+
         it('retrieves objects', function() {
             di.load('AlphaDummy');
             assert.ok(di.get('alphaDummy').isAlpha());
