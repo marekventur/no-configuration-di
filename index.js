@@ -16,10 +16,12 @@ module.exports = function(srcPaths) {
         var result = null;
         var i = 0;
         var len = srcPaths.length;
+        var checkedPaths = [];
 
         while (!result && i < len) {
             var srcPath = srcPaths[i];
             try {
+                checkedPaths.push(srcPath + '/' + path);
                 result = require(srcPath + '/' + path);
             } catch(e) {
                 if (e.code !== 'MODULE_NOT_FOUND') {
@@ -31,7 +33,7 @@ module.exports = function(srcPaths) {
         if (result) {
             return result;
         }
-        throw new Error("Cannot find dependency " + path)
+        throw new Error("Cannot find dependency " + path + " in paths " + checkedPaths.join(', '))
     }
 
     that.load = function(path, instanceName) {
