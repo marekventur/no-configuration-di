@@ -20,11 +20,15 @@ module.exports = function(srcPaths) {
 
         while (!result && i < len) {
             var srcPath = srcPaths[i];
+            var pathToCheck = srcPath + '/' + path;
             try {
-                checkedPaths.push(srcPath + '/' + path);
-                result = require(srcPath + '/' + path);
+                checkedPaths.push(pathToCheck);
+                result = require(pathToCheck);
             } catch(e) {
                 if (e.code !== 'MODULE_NOT_FOUND') {
+                    throw e;
+                }
+                if (e.message.indexOf(pathToCheck) === -1) {
                     throw e;
                 }
             }

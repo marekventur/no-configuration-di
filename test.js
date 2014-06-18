@@ -35,6 +35,15 @@ describe('no-configuration-di', function() {
             }
         });
 
+        it('errors if object has a broken require', function() {
+            try {
+                di.load('ErroringClass2');
+                assert.fail();
+            } catch(err) {
+                assert.match(err.message, /^Cannot find module/);
+            }
+        });
+
         it('retrieves objects', function() {
             di.load('AlphaDummy');
             assert.ok(di.get('alphaDummy').isAlpha());
